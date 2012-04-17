@@ -72,7 +72,7 @@ void Link::send_data(int size, byte data[]) {
   // skip start byte, add 3 to size to include header
   byte b;
   for (int i = 1; i <= size + 3; i++) {
-    b = packet[i];
+    b = packet_out[i];
     if (b == 0x7e || b == 0x7d || b == 0x11 || b == 0x13) {
       // byte must be escaped
       b = b ^ 0x20;
