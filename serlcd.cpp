@@ -18,4 +18,29 @@ void SerLCD::clear() {
 void SerLCD::write(char* text) {
   Serial1.write(text);
 }
-  
+
+
+// Set the current cursor position to the provided line and column
+void SerLCD::set_pos(byte line, byte column) {
+  byte pos = 0;
+  if (line == 0) {
+    pos = column;
+  }
+  if (line == 1) {
+    pos = column + 64;
+  }
+  Serial1.write(0xfe);
+  Serial1.write(0x80 + pos);
+}
+
+// Blanks the display
+void SerLCD::display_on() {
+  Serial1.write(0xfe);
+  Serial1.write(0x0c);
+}
+
+// Unblanks the display
+void SerLCD::display_off() {
+  Serial1.write(0xfe);
+  Serial1.write(0x08);
+}

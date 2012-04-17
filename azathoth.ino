@@ -27,6 +27,8 @@ void setup() {
   init_io();
   lcd.clear();
   lcd.write("Initializing...");
+  lcd.set_pos(1, 0);
+  lcd.write("Azathoth awakens");
   // leave the sonar disabled until we want it.
   sonarAction.disable();
 }
