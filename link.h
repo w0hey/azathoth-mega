@@ -8,7 +8,7 @@ class Link {
   public:
     Link(void (*function)(int, byte*));
     void service();
-    void send_data();
+    void send_data(int, byte*);
   private:
     byte packet[255];
     byte packet_out[255];

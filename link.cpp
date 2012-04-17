@@ -12,6 +12,8 @@ Link::Link(void (*function)(int, byte*)) {
   Serial.begin(115200);
 }
 
+
+// Function to be called when there is pending serial data to process
 void Link::service() {
   while (Serial.available()) {
     // take a byte
@@ -61,6 +63,22 @@ void Link::service() {
     
     // on to the next byte
     pos++;
+  }
+}
+
+void Link::send_data(int size, byte data[]) {
+  build_packet(size, data);
+  Serial.write(packet_out[0]); // Send start byte, successive bytes must be escaped if necessary
+  // skip start byte, add 3 to size to include header
+  byte b;
+  for (int i = 1; i <= size + 3; i++) {
+    b = packet[i];
+    if (b == 0x7e || b == 0x7d || b == 0x11 || b == 0x13) {
+      // byte must be escaped
+      b = b ^ 0x20;
+      Serial.write(0x7d); // escape marker
+    }
+    Serial.write(b);
   }
 }
 
