@@ -43,7 +43,7 @@ void dispatch_packet(int length, byte* packet) {
 }
 
 void init_io() {
-  pinMode(P_LED, INPUT);
+  pinMode(P_LED, OUTPUT);
   digitalWrite(P_LED, HIGH);
   sonar.ping();
 }
