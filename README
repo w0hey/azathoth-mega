@@ -1,3 +1,8 @@
 azathoth-mega -- Code for the Arduino Mega on my robot.
 
 This code is fairly application-specific, but there are some good examples of the right (and wrong!) way to accomplish various robot-related tasks. Feel free to adapt this code for your own projects.
+
+Profanity warning: This code doesn't always contain profanity, but when it does, it is EXTREME, INVENTIVE, and DESCRIPTIVE.
+
+Known issues:
+The serial communication protocol is slightly overcomplicated, as it is sort of based on the XBee API mode 2 protocol. The packet length field is two bytes, even though the buffer size is currently hardcoded at 255 bytes.
