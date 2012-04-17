@@ -45,6 +45,7 @@ void dispatch_packet(int length, byte* packet) {
 void init_io() {
   pinMode(P_LED, OUTPUT);
   digitalWrite(P_LED, HIGH);
+  // Command a ranging cycle just to let the sensor calibrate
   sonar.ping();
 }
 

@@ -66,6 +66,7 @@ void Link::service() {
   }
 }
 
+// Takes the provided data, wraps it in a packet header, and sends it.
 void Link::send_data(int size, byte data[]) {
   build_packet(size, data);
   Serial.write(packet_out[0]); // Send start byte, successive bytes must be escaped if necessary
@@ -87,6 +88,7 @@ void Link::get_length() {
   len = (packet[1] << 8) + packet[2];
 }
 
+// adds a packet header to the provided data for transmission
 void Link::build_packet(int size, byte data[]) {
   packet_out[0] = 0x7e; // start byte
   packet_out[1] = highByte(size + 3); // Length including header
