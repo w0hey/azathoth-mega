@@ -29,8 +29,6 @@ void setup() {
   lcd.write("Initializing...");
   // leave the sonar disabled until we want it.
   sonarAction.disable();
-  // TODO: move this into link.cpp
-  //wait_for_handshake();
 }
 
 void loop() {
@@ -42,20 +40,6 @@ void serialEvent() {
 
 void dispatch_packet(int length, byte* packet) {
   return;
-}
-
-void wait_for_handshake() {
-  byte recv = 0;
-  while (recv != 0xd0) {
-    recv = Serial.read();
-    // Toggle the onboard LED about once a second, probably
-    if (millis() % 1000 == 0) {
-      digitalWrite(13, led_on ? HIGH : LOW);
-      led_on = !led_on;
-    }
-  }
-  led_on = true;
-  digitalWrite(13, HIGH);
 }
 
 void init_io() {
