@@ -24,16 +24,16 @@ Sonar sonar = Sonar();
 TimedAction sonarAction = TimedAction(100, update_sonar);
 
 void setup() {
-  init_io();
   lcd.clear();
   lcd.write("Initializing...");
-  lcd.set_pos(1, 0);
-  lcd.write("Azathoth awakens");
+  init_io();
+  delay(500);
   // leave the sonar disabled until we want it.
   sonarAction.disable();
 }
 
 void loop() {
+
 }
 
 void serialEvent() {
@@ -46,9 +46,14 @@ void dispatch_packet(int length, byte* packet) {
 
 void init_io() {
   pinMode(P_LED, OUTPUT);
+  pinMode(P_SONAR_EN, OUTPUT);
+  pinMode(P_SONAR_PW, INPUT);
   digitalWrite(P_LED, HIGH);
   // Command a ranging cycle just to let the sensor calibrate
+  lcd.set_pos(1,0);
+  lcd.write("Cal SONAR..");
   sonar.ping();
+  lcd.write("done");
 }
 
 void update_sonar() {
