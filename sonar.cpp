@@ -29,9 +29,9 @@ void Sonar::update() {
 void Sonar::ping() {
   // Start a single ranging cycle, useful only for inital calibration
   // Contains a 30uS delay, as required by the sensor datasheet (>20uS)
-  this->enable();
+  enable();
   delayMicroseconds(30);
-  this->disable();
+  disable();
 }
 
 byte Sonar::get_range() {
