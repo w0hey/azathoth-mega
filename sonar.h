@@ -8,7 +8,7 @@
 // How long to wait, in uS, for a sonar return.
 // The sensor times out after 37500 uS, corresponding to a range
 // of about 250"
-#define SONAR_TIMEOUT 35000 // about 238"
+#define SONAR_TIMEOUT 37500 // about 250"
 
 // Scaling factor, microseconds per inch
 #define SONAR_SCALE 147

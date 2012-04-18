@@ -36,5 +36,5 @@ void Sonar::ping() {
 
 byte Sonar::get_range() {
   // Return the last stored range
-  return (byte)_lastrange;
+  return _lastrange;
 }
