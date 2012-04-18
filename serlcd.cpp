@@ -13,12 +13,16 @@ void SerLCD::clear() {
   Serial1.write(0x01); // Clear display
 }
 
-// Prints the provided characters to the LCD
-// Throws them directly to the LCD, no processing is done.
+// writes the provided characters to the LCD
+// this is just a passthrough for Serial.write()
 void SerLCD::write(char* text) {
   Serial1.write(text);
 }
 
+// Convenience method to print an integer as a decimal number
+void SerLCD::print_dec(int i) {
+  Serial1.print(i, DEC);
+}
 
 // Set the current cursor position to the provided line and column
 void SerLCD::set_pos(byte line, byte column) {

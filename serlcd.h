@@ -10,6 +10,7 @@ class SerLCD {
     SerLCD();
     void clear();
     void write(char*);
+    void print_dec(int);
     void backlight();
     void set_pos(byte, byte);
     void display_on();
