@@ -35,7 +35,7 @@ void Sonar::ping() {
   delay(250); // don't return until the ranging/calibration cycle is finished
 }
 
-byte Sonar::get_range() {
+byte Sonar::getRange() {
   // Return the last stored range
   return _lastrange;
 }

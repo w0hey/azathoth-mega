@@ -20,7 +20,7 @@ class Sonar {
     void disable();
     void update();
     void ping();
-    byte get_range(); // Why the hell does this return 'byte', aside from telemetry convenience?
+    byte getRange(); // Why the hell does this return 'byte', aside from telemetry convenience?
   private:
     int _lastrange;
 };
