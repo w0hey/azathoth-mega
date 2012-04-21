@@ -20,12 +20,12 @@ void SerLCD::write(char* text) {
 }
 
 // Convenience method to print an integer as a decimal number
-void SerLCD::print_dec(int i) {
+void SerLCD::printDec(int i) {
   Serial1.print(i, DEC);
 }
 
 // Set the current cursor position to the provided line and column
-void SerLCD::set_pos(byte line, byte column) {
+void SerLCD::setPos(byte line, byte column) {
   byte pos = 0;
   if (line == 0) {
     pos = column;
@@ -38,13 +38,13 @@ void SerLCD::set_pos(byte line, byte column) {
 }
 
 // Blanks the display
-void SerLCD::display_on() {
+void SerLCD::displayOn() {
   Serial1.write(0xfe);
   Serial1.write(0x0c);
 }
 
 // Unblanks the display
-void SerLCD::display_off() {
+void SerLCD::displayOff() {
   Serial1.write(0xfe);
   Serial1.write(0x08);
 }

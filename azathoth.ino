@@ -50,7 +50,7 @@ void init_io() {
   pinMode(P_SONAR_PW, INPUT);
   digitalWrite(P_LED, HIGH);
   // Command a ranging cycle just to let the sensor calibrate
-  lcd.set_pos(1,0);
+  lcd.setPos(1,0);
   lcd.write("Cal SONAR..");
   sonar.ping();
   lcd.write("done");
