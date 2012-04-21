@@ -1,4 +1,4 @@
-// bleh
+// class for communicating with the Beagleboard over serial
 
 #include "link.h"
 #include <Arduino.h>
@@ -51,7 +51,7 @@ void Link::service() {
     // check to see if we have the whole header - something about this
     // smells like a hack
     if (pos == 3) {
-      get_length();
+      getLength();
     }
     
     // check if we're done with this packet
@@ -67,8 +67,8 @@ void Link::service() {
 }
 
 // Takes the provided data, wraps it in a packet header, and sends it.
-void Link::send_data(int size, byte data[]) {
-  build_packet(size, data);
+void Link::sendData(int size, byte data[]) {
+  buildPacket(size, data);
   Serial.write(packet_out[0]); // Send start byte, successive bytes must be escaped if necessary
   // skip start byte, add 3 to size to include header
   byte b;
@@ -83,13 +83,13 @@ void Link::send_data(int size, byte data[]) {
   }
 }
 
-void Link::get_length() {
+void Link::getLength() {
   // read the packet header and set the len variable accordingly
   len = (packet[1] << 8) + packet[2];
 }
 
 // adds a packet header to the provided data for transmission
-void Link::build_packet(int size, byte data[]) {
+void Link::buildPacket(int size, byte data[]) {
   packet_out[0] = 0x7e; // start byte
   packet_out[1] = highByte(size + 3); // Length including header
   packet_out[2] = lowByte(size + 3);

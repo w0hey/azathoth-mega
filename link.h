@@ -8,7 +8,7 @@ class Link {
   public:
     Link(void (*function)(int, byte*));
     void service();
-    void send_data(int, byte*);
+    void sendData(int, byte*);
   private:
     byte packet[255];
     byte packet_out[255];
@@ -19,8 +19,8 @@ class Link {
     boolean in_packet;
     void (*callback)(int, byte*);
     
-    void get_length();
-    void build_packet(int, byte*);
+    void getLength();
+    void buildPacket(int, byte*);
 };
 
 #endif
