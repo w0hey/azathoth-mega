@@ -9,8 +9,8 @@ SerLCD::SerLCD() {
 
 // Clears the LCD display
 void SerLCD::clear() {
-  Serial1.write(0xfe); // Command char
-  Serial1.write(0x01); // Clear display
+  Serial1.write(E_CMD); // Command char
+  Serial1.write(ECMD_CLEAR); // Clear display
 }
 
 // writes the provided characters to the LCD
@@ -33,18 +33,18 @@ void SerLCD::setPos(byte line, byte column) {
   if (line == 1) {
     pos = column + 64;
   }
-  Serial1.write(0xfe);
-  Serial1.write(0x80 + pos);
+  Serial1.write(E_CMD);
+  Serial1.write(ECMD_POS + pos);
 }
 
 // Blanks the display
 void SerLCD::displayOn() {
-  Serial1.write(0xfe);
-  Serial1.write(0x0c);
+  Serial1.write(E_CMD);
+  Serial1.write(ECMD_DISPLAY_ON);
 }
 
 // Unblanks the display
 void SerLCD::displayOff() {
-  Serial1.write(0xfe);
-  Serial1.write(0x08);
+  Serial1.write(E_CMD);
+  Serial1.write(ECMD_DISPLAY_OFF);
 }
