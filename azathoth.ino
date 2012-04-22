@@ -67,6 +67,3 @@ void update_sonar() {
   return;
 }
 
-void comm_error(int errcode) {
-  digitalWrite(P_LED, HIGH);
-}
