@@ -7,5 +7,6 @@
 
 #define P_SONAR_EN 26 // Sonar enable line on digital 26
 #define P_SONAR_PW 27 // Sonar pulse input on digital 27
+#define P_ESTOP 28 // E-Stop relay output
 
 #endif

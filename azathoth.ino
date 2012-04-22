@@ -45,6 +45,11 @@ void dispatch_packet(int length, byte* packet) {
 }
 
 void init_io() {
+  // Without knowing *why* we're booting/rebooting, let's just make sure
+  // the unstoppable 300-pound metal monster is NOT moving:
+  pinMode(P_ESTOP, OUTPUT);
+  digitalWrite(P_ESTOP, LOW);
+  
   pinMode(P_LED, OUTPUT);
   pinMode(P_SONAR_EN, OUTPUT);
   pinMode(P_SONAR_PW, INPUT);
