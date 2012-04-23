@@ -11,9 +11,6 @@ the Beagleboard.
 #include "compass.h"
 #include "serlcd.h"
 
-// Misc variables
-boolean led_on = false; // Keeps track of the current onboard LED state
-
 // Interfaces
 Link link = Link(dispatch_packet);
 SerLCD lcd = SerLCD();
