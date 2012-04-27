@@ -16,7 +16,6 @@ class Link {
     int pos;
     byte len;
     boolean xor_next;
-    boolean in_packet;
     void (*callback)(int, byte*);
     void buildPacket(byte, byte*);
 };

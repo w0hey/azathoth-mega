@@ -7,7 +7,6 @@ Link::Link(void (*function)(int, byte*)) {
   pos = 0;
   len = 0;
   xor_next = false;
-  in_packet = false;
   callback = function;
   Serial.begin(115200);
 }
@@ -20,19 +19,24 @@ void Link::service() {
     // take a byte
     recv = Serial.read();
     
-    // Check for start of packet
-    if (!in_packet && recv == 0x7e) {
-      pos = 0;
-      in_packet = true;
+    if (pos == 0) {
+      // This should be a start byte, otherwise something is wrong
+      if (recv != 0x7e) {
+        // ignore it and move on.
+        continue;
+      }
     }
     
-    // Check for unexpected start of packet
-    if (pos > 0 && recv == 0x7e) {
-      // what the fuck, robot? If we're not currently handling a packet,
-      // receiving anything other than 0x7e is bullshit.
-      pos = 0;
+    if (pos == 1) {
+      // This is the length field, store it.
+      len = recv;
+    }
+    
+    if ((pos != 0) && (recv == 0x7e)) {
+      // This is an unexpected start byte, so reset and move on
       len = 0;
-      continue;
+      pos = 0;
+      xor_next = 0;
     }
     
     // check to see if we need to unescape the next byte
@@ -51,15 +55,9 @@ void Link::service() {
     // store the byte
     packet[pos] = recv;
     
-    // if we have the second byte, we have the length
-    if (pos == 1) {
-      len = recv;
-    }
-    
     // check if we're done with this packet
     if (pos == len - 1) {
       callback(len, packet);
-      in_packet = false;
       pos = 0;
       len = 0;
       continue;
