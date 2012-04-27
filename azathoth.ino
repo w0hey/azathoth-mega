@@ -40,12 +40,15 @@ void serialEvent() {
 
 // Callback from link, when it has a complete packet to process
 void dispatch_packet(int length, byte* packet) {
-  lcd.setPos(0,0);
-  lcd.write("Callback?");
   switch (packet[2]) {
-    case 0x20:
-      lcd.setPos(0, 1);
-      lcd.write("Connected");
+    case 0x01:
+      cmd_connect();
+      break;
+    case 0x02:
+      cmd_disconnect();
+      break;
+    case 0x03:
+      cmd_lcd(length, packet);
       break;
     default:
       break;
@@ -75,3 +78,49 @@ void update_sonar() {
   return;
 }
 
+void cmd_connect() {
+  lcd.clear();
+  lcd.write("Connected");
+}
+
+void cmd_disconnect() {
+  lcd.clear();
+  lcd.write("Disconnected");
+}
+
+void cmd_lcd(int length, byte* packet) {
+  switch (packet[3]) {
+    case 0x00:
+      lcd.clear();
+      break;
+    case 0x01:
+      if (packet[4] == 0x00) {
+        lcd.displayOff();
+      }
+      else if (packet[4] == 0x01) {
+        lcd.displayOn();
+      }
+      break;
+    case 0x02:
+      // TODO
+      break;
+    case 0x03:
+      lcd.setPos(packet[4], packet[5]);
+      break;
+    case 0x04:
+      {
+        int len = length - 4;
+        char *buf = (char*) malloc((len + 1) * sizeof(char));
+        if (buf == NULL) {
+          // allocation failed
+          break;
+        }
+        memcpy(buf, packet + 4, len);
+        buf[len] = 0x00; // terminate the string
+        lcd.write(buf);
+        break;
+      }
+    default:
+      break;
+  }
+}
