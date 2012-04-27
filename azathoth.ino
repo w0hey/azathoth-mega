@@ -93,6 +93,7 @@ void cmd_lcd(int length, byte* packet) {
     case 0x00:
       lcd.clear();
       break;
+    
     case 0x01:
       if (packet[4] == 0x00) {
         lcd.displayOff();
@@ -101,12 +102,15 @@ void cmd_lcd(int length, byte* packet) {
         lcd.displayOn();
       }
       break;
+    
     case 0x02:
       // TODO
       break;
+    
     case 0x03:
       lcd.setPos(packet[4], packet[5]);
       break;
+    
     case 0x04:
       {
         int len = length - 4;
@@ -120,6 +124,7 @@ void cmd_lcd(int length, byte* packet) {
         lcd.write(buf);
         break;
       }
+    
     default:
       break;
   }
