@@ -14,13 +14,11 @@ class Link {
     byte packet_out[255];
     byte recv;
     int pos;
-    int len;
+    byte len;
     boolean xor_next;
     boolean in_packet;
     void (*callback)(int, byte*);
-    
-    void getLength();
-    void buildPacket(int, byte*);
+    void buildPacket(byte, byte*);
 };
 
 #endif

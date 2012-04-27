@@ -21,6 +21,7 @@ Sonar sonar = Sonar();
 TimedAction sonarAction = TimedAction(100, update_sonar);
 
 void setup() {
+  Serial.begin(115200);
   lcd.clear();
   lcd.write("Initializing...");
   init_io();
@@ -30,15 +31,25 @@ void setup() {
 }
 
 void loop() {
-
+  return;
 }
 
 void serialEvent() {
   link.service();
 }
 
+// Callback from link, when it has a complete packet to process
 void dispatch_packet(int length, byte* packet) {
-  return;
+  lcd.setPos(0,0);
+  lcd.write("Callback?");
+  switch (packet[2]) {
+    case 0x20:
+      lcd.setPos(0, 1);
+      lcd.write("Connected");
+      break;
+    default:
+      break;
+  }
 }
 
 void init_io() {

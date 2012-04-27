@@ -15,6 +15,7 @@ Link::Link(void (*function)(int, byte*)) {
 
 // Function to be called when there is pending serial data to process
 void Link::service() {
+  // FIXME: This looks like an idiot's attempt at a state machine
   while (Serial.available()) {
     // take a byte
     recv = Serial.read();
@@ -29,6 +30,8 @@ void Link::service() {
     if (pos > 0 && recv == 0x7e) {
       // what the fuck, robot? If we're not currently handling a packet,
       // receiving anything other than 0x7e is bullshit.
+      pos = 0;
+      len = 0;
       continue;
     }
     
@@ -48,16 +51,17 @@ void Link::service() {
     // store the byte
     packet[pos] = recv;
     
-    // check to see if we have the whole header - something about this
-    // smells like a hack
-    if (pos == 3) {
-      getLength();
+    // if we have the second byte, we have the length
+    if (pos == 1) {
+      len = recv;
     }
     
     // check if we're done with this packet
     if (pos == len - 1) {
       callback(len, packet);
       in_packet = false;
+      pos = 0;
+      len = 0;
       continue;
     }
     
@@ -70,9 +74,9 @@ void Link::service() {
 void Link::sendData(int size, byte data[]) {
   buildPacket(size, data);
   Serial.write(packet_out[0]); // Send start byte, successive bytes must be escaped if necessary
-  // skip start byte, add 3 to size to include header
+  // skip start byte, add 2 to size to include header
   byte b;
-  for (int i = 1; i <= size + 3; i++) {
+  for (int i = 1; i <= size + 2; i++) {
     b = packet_out[i];
     if (b == 0x7e || b == 0x7d || b == 0x11 || b == 0x13) {
       // byte must be escaped
@@ -83,17 +87,12 @@ void Link::sendData(int size, byte data[]) {
   }
 }
 
-void Link::getLength() {
-  // read the packet header and set the len variable accordingly
-  len = (packet[1] << 8) + packet[2];
-}
 
 // adds a packet header to the provided data for transmission
-void Link::buildPacket(int size, byte data[]) {
+void Link::buildPacket(byte size, byte data[]) {
   packet_out[0] = 0x7e; // start byte
-  packet_out[1] = highByte(size + 3); // Length including header
-  packet_out[2] = lowByte(size + 3);
+  packet_out[1] = size + 2; // Length including header
   for (int i = 0; i <= size; i++) {
-    packet_out[3 + i] = data[i];
+    packet_out[2 + i] = data[i];
   }
 }
