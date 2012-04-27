@@ -134,6 +134,7 @@ void cmd_lcd(int length, byte* packet) {
         memcpy(buf, packet + 4, len);
         buf[len] = 0x00; // terminate the string
         lcd.write(buf);
+        free(buf);
         break;
       }
     
