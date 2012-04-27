@@ -26,7 +26,7 @@ void Link::service() {
     }
     
     // Check for unexpected start of packet
-    if (in_packet && recv == 0x7e) {
+    if (pos > 0 && recv == 0x7e) {
       // what the fuck, robot? If we're not currently handling a packet,
       // receiving anything other than 0x7e is bullshit.
       continue;
