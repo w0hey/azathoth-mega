@@ -50,6 +50,18 @@ void dispatch_packet(int length, byte* packet) {
     case 0x03:
       cmd_lcd(length, packet);
       break;
+    case 0x04:
+      cmd_sonar(length, packet);
+      break;
+    case 0x05:
+      cmd_compass(length, packet);
+      break;
+    case 0x06:
+      cmd_speakjet(length, packet);
+      break;
+    case 0xff:
+      cmd_estop();
+      break;
     default:
       break;
   }
@@ -128,4 +140,16 @@ void cmd_lcd(int length, byte* packet) {
     default:
       break;
   }
+}
+
+void cmd_sonar(int length, byte* packet) {
+}
+
+void cmd_compass(int length, byte* packet) {
+}
+
+void cmd_speakjet(int length, byte* packet) {
+}
+
+void cmd_estop() {
 }
