@@ -44,11 +44,11 @@ void serialEvent() {
 // Let's make this a bit smarter..
 
 void dispatch_packet(int length, byte* packet) {
-  len = packet[1] - 1 // we don't need the first payload byte
-  cmd = packet[2] // first payload byte
+  byte len = packet[1] - 1; // we don't need the first payload byte
+  byte cmd = packet[2]; // first payload byte
   // get a buffer of size len
   byte *data = (byte*) malloc((len) * sizeof(byte));
-  if (data == null) {
+  if (data == NULL) {
     // malloc fail!
     handleError(E_MALLOC);
     return;
@@ -80,7 +80,7 @@ void dispatch_packet(int length, byte* packet) {
       break;
   }
   free(data);
-  data = null;
+  data = NULL;
 }
 
 void init_io() {
