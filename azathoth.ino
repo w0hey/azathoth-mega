@@ -30,6 +30,7 @@ void setup() {
   delay(500);
   // leave the sonar disabled until we want it.
   sonarAction.disable();
+  link.sendData(1, 0x99); // Let the BB know we're alive
 }
 
 void loop() {
