@@ -11,6 +11,8 @@ the Beagleboard.
 #include "compass.h"
 #include "serlcd.h"
 
+#define E_MALLOC 0
+
 // Interfaces
 Link link = Link(dispatch_packet);
 SerLCD lcd = SerLCD();
@@ -39,8 +41,20 @@ void serialEvent() {
 }
 
 // Callback from link, when it has a complete packet to process
+// Let's make this a bit smarter..
+
 void dispatch_packet(int length, byte* packet) {
-  switch (packet[2]) {
+  len = packet[1] - 1 // we don't need the first payload byte
+  cmd = packet[2] // first payload byte
+  // get a buffer of size len
+  byte *data = (byte*) malloc((len) * sizeof(byte));
+  if (data == null) {
+    // malloc fail!
+    handleError(E_MALLOC);
+    return;
+  }
+  memcpy(data, packet + 3, len);
+  switch (cmd) {
     case 0x01:
       cmd_connect();
       break;
@@ -48,16 +62,16 @@ void dispatch_packet(int length, byte* packet) {
       cmd_disconnect();
       break;
     case 0x03:
-      cmd_lcd(length, packet);
+      cmd_lcd(len, data);
       break;
     case 0x04:
-      cmd_sonar(length, packet);
+      cmd_sonar(len, data);
       break;
     case 0x05:
-      cmd_compass(length, packet);
+      cmd_compass(len, data);
       break;
     case 0x06:
-      cmd_speakjet(length, packet);
+      cmd_speakjet(len, data);
       break;
     case 0xff:
       cmd_estop();
@@ -65,6 +79,8 @@ void dispatch_packet(int length, byte* packet) {
     default:
       break;
   }
+  free(data);
+  data = null;
 }
 
 void init_io() {
@@ -100,17 +116,17 @@ void cmd_disconnect() {
   lcd.write("Disconnected");
 }
 
-void cmd_lcd(int length, byte* packet) {
-  switch (packet[3]) {
+void cmd_lcd(int length, byte* data) {
+  switch (data[0]) {
     case 0x00:
       lcd.clear();
       break;
     
     case 0x01:
-      if (packet[4] == 0x00) {
+      if (data[1] == 0x00) {
         lcd.displayOff();
       }
-      else if (packet[4] == 0x01) {
+      else if (data[1] == 0x01) {
         lcd.displayOn();
       }
       break;
@@ -120,18 +136,18 @@ void cmd_lcd(int length, byte* packet) {
       break;
     
     case 0x03:
-      lcd.setPos(packet[4], packet[5]);
+      lcd.setPos(data[1], data[2]);
       break;
     
     case 0x04:
       {
-        int len = length - 4;
+        int len = length - 1;
         char *buf = (char*) malloc((len + 1) * sizeof(char));
         if (buf == NULL) {
           // allocation failed
-          break;
+          handleError(E_MALLOC);
         }
-        memcpy(buf, packet + 4, len);
+        memcpy(buf, data + 2, len);
         buf[len] = 0x00; // terminate the string
         lcd.write(buf);
         free(buf);
@@ -153,4 +169,7 @@ void cmd_speakjet(int length, byte* packet) {
 }
 
 void cmd_estop() {
+}
+
+void handleError(int errcode) {
 }
