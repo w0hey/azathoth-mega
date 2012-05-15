@@ -1,0 +1,4 @@
+TODO:
+
+* Redesign the link code to use a two-byte length field, or rewrite it
+  from scratch.
