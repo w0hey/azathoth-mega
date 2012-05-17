@@ -14,7 +14,7 @@ the Beagleboard.
 #define E_MALLOC 0
 
 // Interfaces
-Link link = Link(dispatch_packet);
+Link link = Link(handleError);
 SerLCD lcd = SerLCD();
 Sonar sonar = Sonar();
 
@@ -29,6 +29,7 @@ void setup() {
   init_io();
   // leave the sonar disabled until we want it.
   sonarAction.disable();
+  link.setHandler(0x03, cmd_lcd);
   byte data[1] = {0x01};
   link.sendData(1, data); // Let the BB know we're alive
 }
@@ -39,43 +40,6 @@ void loop() {
 
 void serialEvent() {
   link.service();
-}
-
-// Callback from link, when it has a complete packet to process
-// Let's make this a bit smarter..
-
-void dispatch_packet(int length, byte* packet) {
-  byte len = packet[1] - 1; // we don't need the first payload byte
-  byte cmd = packet[2]; // first payload byte
-  // get a buffer of size len
-  byte *data = (byte*) malloc((len) * sizeof(byte));
-  if (data == NULL) {
-    // malloc fail!
-    handleError(E_MALLOC);
-    return;
-  }
-  memcpy(data, packet + 3, len);
-  switch (cmd) {
-    case 0x03:
-      cmd_lcd(len, data);
-      break;
-    case 0x04:
-      cmd_sonar(len, data);
-      break;
-    case 0x05:
-      cmd_compass(len, data);
-      break;
-    case 0x06:
-      cmd_speakjet(len, data);
-      break;
-    case 0xff:
-      cmd_estop();
-      break;
-    default:
-      break;
-  }
-  free(data);
-  data = NULL;
 }
 
 void init_io() {
@@ -91,7 +55,7 @@ void update_sonar() {
   return;
 }
 
-void cmd_lcd(int length, byte* data) {
+void cmd_lcd(byte length, byte* data) {
   switch (data[0]) {
     case 0x00:
       lcd.clear();
@@ -146,5 +110,5 @@ void cmd_speakjet(int length, byte* packet) {
 void cmd_estop() {
 }
 
-void handleError(int errcode) {
+void handleError(byte errcode) {
 }

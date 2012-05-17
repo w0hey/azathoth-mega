@@ -3,12 +3,27 @@
 #include "link.h"
 #include <Arduino.h>
 
-Link::Link(void (*function)(int, byte*)) {
+Link::Link(void (*errhandler)(byte)) {
+  nHandlers = 0;
   pos = 0;
   len = 0;
   xor_next = false;
-  callback = function;
+  errHandler = errhandler;
   Serial.begin(115200);
+}
+
+void Link::setHandler(byte cmd, void(*handler)(byte, byte*)) {
+  nHandlers++;
+  handler_t* ptr = (handler_t*)realloc(handlers, sizeof(handler_t) * nHandlers);
+  if (ptr == NULL) {
+    // realloc failed
+    nHandlers--;
+    return;
+  }
+  handlers = ptr;
+  handlers[nHandlers - 1].command = cmd;
+  handlers[nHandlers - 1].handler = handler;
+  qsort(handlers, nHandlers, sizeof(handler_t), compare);
 }
 
 
@@ -57,7 +72,7 @@ void Link::service() {
     
     // check if we're done with this packet
     if (pos == len + 1) {
-      callback(len, packet);
+      dispatch(len, packet);
       pos = 0;
       len = 0;
       continue;
@@ -93,4 +108,43 @@ void Link::buildPacket(byte size, byte data[]) {
   for (int i = 0; i <= size; i++) {
     packet_out[2 + i] = data[i];
   }
+}
+
+void Link::dispatch(byte length, byte* packet) {
+  byte cmd = packet[2];
+  byte len = packet[1] - 1;
+  byte *data = (byte*)malloc(len * sizeof(byte));
+  if (data == NULL){
+    // malloc failed
+    return;
+  }
+  memcpy(data, packet + 3, len);
+  void (*h)(byte, byte*) = getHandler(cmd);
+  if (h == NULL) {
+    // not found
+    return;
+  }
+  h(len, data);
+  free(data);
+}
+
+void (*Link::getHandler(byte cmd))(byte, byte*) {
+  handler_t h = *(handler_t*)bsearch(&cmd, handlers, nHandlers, sizeof(handler_t), compare_key);
+    if (&h == NULL) {
+      //nothing!
+      return NULL;
+    }
+    return h.handler;
+}
+
+int Link::compare_key(const void *p1, const void *p2) {
+  byte k = *(byte*)p1;
+  handler_t h = *(handler_t*)p2;
+  return (k - h.command);
+}
+
+int Link::compare(const void *p1, const void *p2) {
+  handler_t h1 = *(handler_t*)p1;
+  handler_t h2 = *(handler_t*)p2;
+  return (h1.command - h2.command);
 }
