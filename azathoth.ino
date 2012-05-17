@@ -29,7 +29,8 @@ void setup() {
   init_io();
   // leave the sonar disabled until we want it.
   sonarAction.disable();
-  link.sendData(1, 0x99); // Let the BB know we're alive
+  byte data[1] = {0x01};
+  link.sendData(1, data); // Let the BB know we're alive
 }
 
 void loop() {
