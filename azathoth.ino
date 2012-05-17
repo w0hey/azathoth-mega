@@ -59,17 +59,5 @@ void lcd_handler(byte length, byte* data) {
   lcd.handle(length, data);
 }
 
-void cmd_sonar(int length, byte* packet) {
-}
-
-void cmd_compass(int length, byte* packet) {
-}
-
-void cmd_speakjet(int length, byte* packet) {
-}
-
-void cmd_estop() {
-}
-
 void handleError(byte errcode) {
 }
