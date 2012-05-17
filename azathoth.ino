@@ -29,7 +29,7 @@ void setup() {
   init_io();
   // leave the sonar disabled until we want it.
   sonarAction.disable();
-  link.setHandler(0x03, cmd_lcd);
+  link.setHandler(0x03, lcd_handler);
   byte data[1] = {0x01};
   link.sendData(1, data); // Let the BB know we're alive
 }
@@ -55,47 +55,8 @@ void update_sonar() {
   return;
 }
 
-void cmd_lcd(byte length, byte* data) {
-  switch (data[0]) {
-    case 0x00:
-      lcd.clear();
-      break;
-    
-    case 0x01:
-      if (data[1] == 0x00) {
-        lcd.displayOff();
-      }
-      else if (data[1] == 0x01) {
-        lcd.displayOn();
-      }
-      break;
-    
-    case 0x02:
-      // TODO
-      break;
-    
-    case 0x03:
-      lcd.setPos(data[1], data[2]);
-      break;
-    
-    case 0x04:
-      {
-        int len = length - 1;
-        char *buf = (char*) malloc((len + 1) * sizeof(char));
-        if (buf == NULL) {
-          // allocation failed
-          handleError(E_MALLOC);
-        }
-        memcpy(buf, data + 2, len);
-        buf[len] = 0x00; // terminate the string
-        lcd.write(buf);
-        free(buf);
-        break;
-      }
-    
-    default:
-      break;
-  }
+void lcd_handler(byte length, byte* data) {
+  lcd.handle(length, data);
 }
 
 void cmd_sonar(int length, byte* packet) {

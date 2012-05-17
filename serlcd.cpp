@@ -48,3 +48,46 @@ void SerLCD::displayOff() {
   Serial1.write(E_CMD);
   Serial1.write(ECMD_DISPLAY_OFF);
 }
+
+void SerLCD::handle(byte length, byte* data) {
+   switch (data[0]) {
+    case 0x00: // Clear LCD
+      clear();
+      break;
+    
+    case 0x01: // Set display on/off
+      if (data[1] == 0x00) {
+        displayOff();
+      }
+      else if (data[1] == 0x01) {
+        displayOn();
+      }
+      break;
+    
+    case 0x02: // I forget
+      // TODO
+      break;
+    
+    case 0x03: // set cursor position
+      setPos(data[1], data[2]);
+      break;
+    
+    case 0x04: // write
+      {
+        int len = length - 1;
+        char *buf = (char*) malloc((len + 1) * sizeof(char));
+        if (buf == NULL) {
+          // allocation failed
+          //handleError(E_MALLOC);
+        }
+        memcpy(buf, data + 2, len);
+        buf[len] = 0x00; // terminate the string
+        write(buf);
+        free(buf);
+        break;
+      }
+    
+    default:
+      break;
+  }
+}

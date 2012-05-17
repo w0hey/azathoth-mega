@@ -23,6 +23,7 @@ class SerLCD {
     void setPos(byte, byte);
     void displayOn();
     void displayOff();
+    void handle(byte, byte*);
   private:
 };
 
