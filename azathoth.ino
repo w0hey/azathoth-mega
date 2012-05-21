@@ -12,6 +12,9 @@ the Beagleboard.
 #include "compass.h"
 #include "serlcd.h"
 
+int vBat = 0;
+int v12 = 0;
+int v5 = 0;
 
 // Interfaces
 Link link = Link(handleError);
@@ -21,6 +24,7 @@ Sonar sonar = Sonar();
 // Psuedothreads
 // Update sonar every 100ms by default
 TimedAction sonarAction = TimedAction(100, update_sonar);
+TimedAction adcAction = TimedAction(2000, update_adc);
 
 void setup() {
   Serial.begin(115200);
@@ -53,6 +57,15 @@ void update_sonar() {
   // Stub, since we can't just pass sonar.update() to TimedAction (grumble)
   sonar.update();
   return;
+}
+
+void update_compass() {
+}
+
+void update_adc() {
+  vBat = analogRead(ADC_24V);
+  v12 = analogRead(ADC_12V);
+  v5 = analogRead(ADC_5V);
 }
 
 void lcd_handler(byte length, byte* data) {
