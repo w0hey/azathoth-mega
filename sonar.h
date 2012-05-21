@@ -8,7 +8,7 @@
 // How long to wait, in uS, for a sonar return.
 // The sensor times out after 37500 uS, corresponding to a range
 // of about 250"
-#define SONAR_TIMEOUT 37500 // about 250"
+#define SONAR_TIMEOUT 37500
 
 // Scaling factor, microseconds per inch
 #define SONAR_SCALE 147
@@ -20,7 +20,8 @@ class Sonar {
     void disable();
     void update();
     void ping();
-    byte getRange(); // Why the hell does this return 'byte', aside from telemetry convenience?
+    byte getRange();
+    void handle(byte, byte*);
   private:
     int _lastrange;
 };

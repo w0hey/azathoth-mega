@@ -5,7 +5,8 @@
 
 // Constructor
 Sonar::Sonar() {
-  // this should be taken care of at a higher level, but eh.
+  pinMode(P_SONAR_EN, OUTPUT);
+  pinMode(P_SONAR_PW, INPUT);
   digitalWrite(P_SONAR_EN, LOW);
 }
 
@@ -38,4 +39,8 @@ void Sonar::ping() {
 byte Sonar::getRange() {
   // Return the last stored range
   return _lastrange;
+}
+
+void Sonar::handle(byte length, byte* data) {
+
 }
