@@ -2,6 +2,7 @@
 
 #include "link.h"
 #include <Arduino.h>
+#include "errors.h"
 
 Link::Link(void (*errhandler)(byte)) {
   nHandlers = 0;

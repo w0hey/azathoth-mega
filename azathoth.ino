@@ -6,12 +6,12 @@ the Beagleboard.
 #include <Wire.h>
 
 #include "pinout.h"
+#include "errors.h"
 #include "link.h"
 #include "sonar.h"
 #include "compass.h"
 #include "serlcd.h"
 
-#define E_MALLOC 0
 
 // Interfaces
 Link link = Link(handleError);

@@ -4,6 +4,7 @@
 #define _SERLCD_H_
 
 #include <Arduino.h>
+#include "errors.h"
 
 #define BAUD_RESET 0x12 // <Control>-R
 
