@@ -20,10 +20,12 @@ int v5 = 0;
 Link link = Link(handleError);
 SerLCD lcd = SerLCD();
 Sonar sonar = Sonar();
+Compass compass = Compass();
 
 // Psuedothreads
 // Update sonar every 100ms by default
 TimedAction sonarAction = TimedAction(100, update_sonar);
+TimedAction compassAction = TimedAction(100, update_compass);
 TimedAction adcAction = TimedAction(2000, update_adc);
 
 void setup() {
@@ -33,6 +35,7 @@ void setup() {
   init_io();
   // leave the sonar disabled until we want it.
   sonarAction.disable();
+  compassAction.disable();
   link.setHandler(0x03, lcd_handler);
   byte data[1] = {0x01};
   link.sendData(1, data); // Let the BB know we're alive
