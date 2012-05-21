@@ -37,12 +37,13 @@ void setup() {
   sonarAction.disable();
   compassAction.disable();
   link.setHandler(0x03, lcd_handler);
+  link.setHandler(0x04, sonar_handler);
   byte data[1] = {0x01};
   link.sendData(1, data); // Let the BB know we're alive
 }
 
 void loop() {
-  return;
+  sonarAction.check();
 }
 
 void serialEvent() {
@@ -73,6 +74,10 @@ void update_adc() {
 
 void lcd_handler(byte length, byte* data) {
   lcd.handle(length, data);
+}
+
+void sonar_handler(byte length, byte* data) {
+  sonar.handle(length, data);
 }
 
 void handleError(byte errcode) {
