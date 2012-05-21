@@ -16,18 +16,21 @@ class Link {
     void service();
     void sendData(int, byte*);
   private:
-    byte packet[255];
-    byte packet_out[255];
+    byte packet[255]; // buffer for incoming packet
+    byte packet_out[255]; // buffer for outgoing packet
     byte recv;
     int pos;
     byte len;
     boolean xor_next;
-    int nHandlers;
-    handler_t* handlers;
+    
+    int nHandlers; // number of registered command handlers
+    handler_t* handlers; // array of command handlers
+    void (*errHandler)(byte); // pointer to a function to call on error
+    
     void buildPacket(byte, byte*);
-    void (*errHandler)(byte);
     void dispatch(byte, byte*);
     void (*getHandler(byte))(byte, byte*);
+    
     static int compare_key(const void*, const void*);
     static int compare(const void*, const void*);
 };
