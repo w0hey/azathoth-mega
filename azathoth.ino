@@ -30,9 +30,9 @@ TimedAction adcAction = TimedAction(2000, update_adc);
 
 void setup() {
   Serial.begin(115200);
+  pinMode(P_LED, OUTPUT);
   lcd.clear();
   lcd.write("Initializing...");
-  init_io();
   // leave the sonar disabled until we want it.
   sonarAction.disable();
   compassAction.disable();
@@ -48,13 +48,6 @@ void loop() {
 
 void serialEvent() {
   link.service();
-}
-
-void init_io() {
-  pinMode(P_LED, OUTPUT);
-  pinMode(P_SONAR_EN, OUTPUT);
-  pinMode(P_SONAR_PW, INPUT);
-  digitalWrite(P_LED, HIGH);
 }
 
 void update_sonar() {
