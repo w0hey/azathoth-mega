@@ -16,7 +16,7 @@
 
 class SerLCD {
   public:
-    SerLCD();
+    SerLCD(void(*)(byte));
     void clear();
     void write(char*);
     void printDec(int);
@@ -26,6 +26,7 @@ class SerLCD {
     void displayOff();
     void handle(byte, byte*);
   private:
+    void (*errHandler)(byte);
 };
 
 #endif

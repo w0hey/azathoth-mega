@@ -18,7 +18,7 @@ int v5 = 0;
 
 // Interfaces
 Link link = Link(handleError);
-SerLCD lcd = SerLCD();
+SerLCD lcd = SerLCD(handleError);
 Sonar sonar = Sonar();
 Compass compass = Compass();
 

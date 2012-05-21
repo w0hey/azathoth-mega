@@ -2,8 +2,9 @@
 
 #include "serlcd.h"
 
-SerLCD::SerLCD() {
+SerLCD::SerLCD(void (*errhandler)(byte)) {
   // TODO: Make serial port selectable
+  errHandler = errhandler;
   Serial1.begin(9600);
 }
 
@@ -78,7 +79,7 @@ void SerLCD::handle(byte length, byte* data) {
         char *buf = (char*) malloc((len + 1) * sizeof(char));
         if (buf == NULL) {
           // allocation failed
-          //handleError(E_MALLOC);
+          errHandler(E_MALLOC);
         }
         memcpy(buf, data + 2, len);
         buf[len] = 0x00; // terminate the string
