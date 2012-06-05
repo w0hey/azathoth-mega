@@ -25,6 +25,7 @@ Compass compass = Compass();
 // Psuedothreads
 // Update sonar every 100ms by default
 TimedAction sonarAction = TimedAction(100, update_sonar);
+TimedAction sonarSender = TimedAction(500, send_sonar);
 TimedAction compassAction = TimedAction(100, update_compass);
 TimedAction adcAction = TimedAction(2000, update_adc);
 
@@ -44,6 +45,8 @@ void setup() {
 
 void loop() {
   sonarAction.check();
+  sonarSender.check();
+  adcAction.check();
 }
 
 void serialEvent() {
@@ -53,7 +56,18 @@ void serialEvent() {
 void update_sonar() {
   // Stub, since we can't just pass sonar.update() to TimedAction (grumble)
   sonar.update();
+  byte range = sonar.getRange();
+  if (range < 24) {
+    byte data[2] = {0x40, range};
+    link.sendData(2, data);
+  };
   return;
+}
+
+void send_sonar() {
+  byte range = sonar.getRange();
+  byte data[2] = {0x40, range};
+  link.sendData(2, data);
 }
 
 void update_compass() {
