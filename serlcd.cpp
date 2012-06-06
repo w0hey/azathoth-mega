@@ -81,7 +81,7 @@ void SerLCD::handle(byte length, byte* data) {
           // allocation failed
           errHandler(E_MALLOC);
         }
-        memcpy(buf, data + 2, len);
+        memcpy(buf, data + 1, len);
         buf[len] = 0x00; // terminate the string
         write(buf);
         free(buf);
