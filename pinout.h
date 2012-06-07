@@ -5,8 +5,8 @@
 
 #define P_LED 13 // Onboard LED on digital 13
 
-#define P_SONAR_EN 26 // Sonar enable line on digital 26
-#define P_SONAR_PW 27 // Sonar pulse input on digital 27
+#define P_SONAR_EN 52 // Sonar enable line on digital 52
+#define P_SONAR_PW 53 // Sonar pulse input on digital 53
 #define P_ESTOP 28 // E-Stop relay output
 
 // Analog
