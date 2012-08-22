@@ -5,24 +5,29 @@
 SerLCD::SerLCD(void (*errhandler)(byte)) {
   // TODO: Make serial port selectable
   errHandler = errhandler;
-  Serial1.begin(9600);
+  // deal with occasionaly baud rate glitches
+  Serial2.begin(2400);
+  Serial2.write(124);
+  Serial2.write(13);
+  Serial2.begin(9600);
+  clear();
 }
 
 // Clears the LCD display
 void SerLCD::clear() {
-  Serial1.write(E_CMD); // Command char
-  Serial1.write(ECMD_CLEAR); // Clear display
+  Serial2.write(E_CMD); // Command char
+  Serial2.write(ECMD_CLEAR); // Clear display
 }
 
 // writes the provided characters to the LCD
 // this is just a passthrough for Serial.write()
 void SerLCD::write(char* text) {
-  Serial1.write(text);
+  Serial2.write(text);
 }
 
 // Convenience method to print an integer as a decimal number
 void SerLCD::printDec(int i) {
-  Serial1.print(i, DEC);
+  Serial2.print(i, DEC);
 }
 
 // Set the current cursor position to the provided line and column
@@ -34,20 +39,20 @@ void SerLCD::setPos(byte line, byte column) {
   if (line == 1) {
     pos = column + 64;
   }
-  Serial1.write(E_CMD);
-  Serial1.write(ECMD_POS + pos);
+  Serial2.write(E_CMD);
+  Serial2.write(ECMD_POS + pos);
 }
 
 // Blanks the display
 void SerLCD::displayOn() {
-  Serial1.write(E_CMD);
-  Serial1.write(ECMD_DISPLAY_ON);
+  Serial2.write(E_CMD);
+  Serial2.write(ECMD_DISPLAY_ON);
 }
 
 // Unblanks the display
 void SerLCD::displayOff() {
-  Serial1.write(E_CMD);
-  Serial1.write(ECMD_DISPLAY_OFF);
+  Serial2.write(E_CMD);
+  Serial2.write(ECMD_DISPLAY_OFF);
 }
 
 void SerLCD::handle(byte length, byte* data) {

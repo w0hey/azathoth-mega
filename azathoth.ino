@@ -31,7 +31,9 @@ TimedAction adcAction = TimedAction(2000, update_adc);
 
 void setup() {
   Serial.begin(115200);
+  Serial2.begin(9600);
   pinMode(P_LED, OUTPUT);
+  delay(1000); // wait for serial lcd to settle before touching it.
   lcd.clear();
   lcd.write("Initializing...");
   // leave the sonar disabled until we want it.
